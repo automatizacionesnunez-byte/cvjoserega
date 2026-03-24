@@ -32,17 +32,22 @@ export default function NewCV() {
     setIsGuest(localStorage.getItem('cvpilot_guest_mode') === 'true');
   }, []);
 
-  const wizardCategories = ['Todos', 'Clásico', 'Moderno', 'Tech', 'Creativo'];
+  const wizardCategories = ['Todos', 'Clásico', 'Moderno', 'Tech', 'Creativo', 'Executive', 'Minimalist'];
 
   const wizardTemplates = [
     { id: 'professional-light-v1', name: 'Ivory Archive', category: 'Clásico', gradient: 'from-[#f5f0e8] to-[#e8e0d0]', accent: '#8B7355', dark: false },
     { id: 'professional-light-v2', name: 'Minimal Academic', category: 'Clásico', gradient: 'from-white to-[#f7f7f7]', accent: '#374151', dark: false },
     { id: 'classic', name: 'Standard Times', category: 'Clásico', gradient: 'from-[#f8fafc] to-[#e2e8f0]', accent: '#1e293b', dark: false },
+    { id: 'dev-focus-v1', name: 'Kernel Architect', category: 'Tech', gradient: 'from-[#0f172a] to-[#1e293b]', accent: '#38bdf8', dark: true },
+    { id: 'dev-focus-v2', name: 'Fullstack Cloud', category: 'Tech', gradient: 'from-[#0b0e14] to-[#161b22]', accent: '#238636', dark: true },
     { id: 'professional-dark-v1', name: 'Aetheric Tech', category: 'Moderno', gradient: 'from-[#1e1b4b] to-[#0f172a]', accent: '#818cf8', dark: true },
     { id: 'professional-dark-v2', name: 'Midnight Executive', category: 'Moderno', gradient: 'from-[#020617] to-[#0f172a]', accent: '#e2e8f0', dark: true },
+    { id: 'executive-blue-v1', name: 'Blue Chip Leader', category: 'Executive', gradient: 'from-[#f8fafc] to-[#f1f5f9]', accent: '#1e3a8a', dark: false },
+    { id: 'executive-blue-v2', name: 'Royal Corporate', category: 'Executive', gradient: 'from-[#ffffff] to-[#eef2ff]', accent: '#3730a3', dark: false },
     { id: 'professional-modern-v1', name: 'Indigo Matrix', category: 'Moderno', gradient: 'from-[#4f46e5] to-[#7c3aed]', accent: '#e0e7ff', dark: true },
     { id: 'professional-modern-v2', name: 'Startup Flow', category: 'Tech', gradient: 'from-[#3b82f6] to-[#6366f1]', accent: '#dbeafe', dark: true },
-    { id: 'modern', name: 'Default Spark', category: 'Tech', gradient: 'from-[#6366f1] to-[#8b5cf6]', accent: '#c7d2fe', dark: true },
+    { id: 'minimal-grid-v1', name: 'Grid Curator', category: 'Creativo', gradient: 'from-[#ffffff] to-[#fafafa]', accent: '#000000', dark: false },
+    { id: 'minimal-grid-v2', name: 'Swiss Type', category: 'Creativo', gradient: 'from-[#fdfdfd] to-[#f5f5f5]', accent: '#ff0000', dark: false },
     { id: 'eye-catching-v1', name: 'Rose Curator', category: 'Creativo', gradient: 'from-[#fb7185] to-[#e11d48]', accent: '#fff1f2', dark: true },
     { id: 'eye-catching-v2', name: 'Vibrant Portfolio', category: 'Creativo', gradient: 'from-[#f43f5e] to-[#be123c]', accent: '#ffe4e6', dark: true },
   ];

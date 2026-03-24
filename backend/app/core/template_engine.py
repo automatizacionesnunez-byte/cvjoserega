@@ -448,6 +448,177 @@ class TemplateEngine:
         </body>
         </html>
         """
+        # 5. Dev-Focus (The Fullstack Architect)
+        dev_focus = """
+        <html>
+        <head>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700&display=swap');
+                body { font-family: 'Inter', sans-serif; color: #e2e8f0; line-height: 1.6; margin: 0; padding: 40px; background: #0f172a; }
+                header { border-left: 4px solid #38bdf8; padding-left: 30px; margin-bottom: 50px; }
+                h1 { font-family: 'JetBrains Mono', monospace; font-size: 3rem; margin: 0; color: #fff; }
+                .terminal-line { font-family: 'JetBrains Mono', monospace; color: #38bdf8; font-size: 0.9rem; margin-top: 5px; }
+                h2 { font-family: 'JetBrains Mono', monospace; color: #38bdf8; font-size: 1.2rem; margin-top: 40px; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 10px; }
+                h2:before { content: 'root@cv:~$'; opacity: 0.5; font-size: 0.7em; }
+                .exp-box { background: #1e293b; padding: 25px; border-radius: 12px; margin-top: 15px; border: 1px solid #334155; }
+                .role { font-weight: 700; color: #fff; font-size: 1.2rem; }
+                .company { color: #94a3b8; }
+                .date { float: right; color: #64748b; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+                .skill-tag { display: inline-block; background: #0ea5e9; color: #fff; padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; margin: 3px; }
+            </style>
+        </head>
+        <body>
+            <header>
+                <h1>{{ cv.personal_info.name }}</h1>
+                <div class="terminal-line">> {{ cv.experience[0].role if cv.experience else 'Engineer' }} | {{ cv.personal_info.location }}</div>
+                <div class="terminal-line">> {{ cv.personal_info.email }} | {{ cv.personal_info.phone }}</div>
+            </header>
+            
+            <p style="color: #94a3b8; border-left: 2px solid #334155; padding-left: 20px;">{{ cv.personal_info.summary }}</p>
+
+            <h2>Experience</h2>
+            {% for exp in cv.experience %}
+            <div class="exp-box">
+                <span class="date">{{ exp.start_date }} - {{ exp.end_date if not exp.present else 'Present' }}</span>
+                <div class="role">{{ exp.role }}</div>
+                <div class="company">{{ exp.company }}</div>
+                <ul style="margin-top: 15px; color: #cbd5e1;">
+                    {% for bullet in exp.achievements %}
+                        <li>{{ bullet }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+
+            <h2>Tech Stack</h2>
+            <div style="margin-top: 15px;">
+                {% for skill in cv.skills.technical %}
+                    <span class="skill-tag">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        </body>
+        </html>
+        """
+
+        # 6. Executive-Blue (The Corporate Formal)
+        executive_blue = """
+        <html>
+        <head>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,600;0,700;1,400&family=Montserrat:wght@400;500;700&display=swap');
+                body { font-family: 'Montserrat', sans-serif; color: #333; margin: 0; padding: 0; line-height: 1.4; }
+                .blue-bar { height: 15px; background: #1e3a8a; width: 100%; }
+                .header { padding: 50px 60px; background: #f8fafc; border-bottom: 5px solid #1e3a8a; }
+                h1 { font-family: 'Crimson Pro', serif; font-size: 3.5rem; margin: 0; color: #1e3a8a; }
+                .contact { display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.8rem; font-weight: 500; color: #64748b; }
+                .main { padding: 40px 60px; }
+                h2 { font-size: 1rem; color: #1e3a8a; border-bottom: 2px solid #1e3a8a; padding-bottom: 5px; margin-top: 35px; text-transform: uppercase; letter-spacing: 0.1em; }
+                .exp-item { margin-top: 20px; }
+                .flex-between { display: flex; justify-content: space-between; align-items: baseline; }
+                .bold { font-weight: 700; color: #1e293b; }
+                .sidebar-box { margin-top: 40px; }
+            </style>
+        </head>
+        <body>
+            <div class="blue-bar"></div>
+            <header class="header">
+                <h1>{{ cv.personal_info.name }}</h1>
+                <div class="contact">
+                    <span>{{ cv.personal_info.location }}</span>
+                    <span>{{ cv.personal_info.email }}</span>
+                    <span>{{ cv.personal_info.phone }}</span>
+                </div>
+            </header>
+            <div class="main">
+                <section>
+                    <p style="font-family: 'Crimson Pro', serif; font-size: 1.25rem; font-style: italic; color: #475569;">{{ cv.personal_info.summary }}</p>
+                </section>
+                
+                <section>
+                    <h2>Historial Corporativo</h2>
+                    {% for exp in cv.experience %}
+                    <div class="exp-item">
+                        <div class="flex-between">
+                            <span class="bold" style="font-size: 1.1rem;">{{ exp.role }}</span>
+                            <span style="font-size: 0.8rem; font-weight: 600;">{{ exp.start_date }} — {{ exp.end_date if not exp.present else 'ACTUALIDAD' }}</span>
+                        </div>
+                        <div style="color: #1e3a8a; font-weight: 600; font-size: 0.9rem; margin-bottom: 10px;">{{ exp.company }}</div>
+                        <ul style="font-size: 0.9rem; color: #334155;">
+                            {% for bullet in exp.achievements %}
+                                <li>{{ bullet }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </section>
+            </div>
+        </body>
+        </html>
+        """
+
+        # 7. Minimal-Grid (The Design Portfolio)
+        minimal_grid = """
+        <html>
+        <head>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
+                body { font-family: 'Outfit', sans-serif; color: #111; margin: 0; padding: 60px; background: white; }
+                .grid-container { display: grid; grid-template-columns: 200px 1fr; gap: 60px; }
+                h1 { font-size: 4rem; font-weight: 800; margin: 0; line-height: 0.8; letter-spacing: -2px; }
+                .top-info { border-bottom: 10px solid #000; padding-bottom: 30px; margin-bottom: 50px; }
+                h2 { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; color: #999; margin-bottom: 20px; }
+                .content-block { margin-bottom: 40px; }
+                .year { font-weight: 800; font-size: 0.8rem; }
+                .job-box { margin-bottom: 30px; }
+            </style>
+        </head>
+        <body>
+            <div class="top-info">
+                <h1>{{ cv.personal_info.name.split(' ')[0] }}<br/>{{ cv.personal_info.name.split(' ')[1:]|join(' ') }}</h1>
+                <div style="margin-top: 30px; font-weight: 600; font-size: 1.2rem;">{{ cv.experience[0].role if cv.experience else '' }}</div>
+            </div>
+            
+            <div class="grid-container">
+                <aside>
+                    <div class="content-block">
+                        <h2>Contacto</h2>
+                        <div style="font-size: 0.8rem; line-height: 2;">
+                            {{ cv.personal_info.email }}<br/>
+                            {{ cv.personal_info.phone }}<br/>
+                            {{ cv.personal_info.location }}
+                        </div>
+                    </div>
+                    <div class="content-block">
+                        <h2>Tech</h2>
+                        <div style="font-size: 0.8rem; font-weight: 600; line-height: 2;">
+                        {% for skill in cv.skills.technical %}
+                            {{ skill }}<br/>
+                        {% endfor %}
+                        </div>
+                    </div>
+                </aside>
+                
+                <main>
+                    <div class="content-block">
+                        <h2>Perfil</h2>
+                        <p style="font-size: 1.1rem; margin: 0;">{{ cv.personal_info.summary }}</p>
+                    </div>
+                    
+                    <div class="content-block">
+                        <h2>Trayectoria</h2>
+                        {% for exp in cv.experience %}
+                        <div class="job-box">
+                            <span class="year">{{ exp.start_date.split(' ')[-1] if ' ' in exp.start_date else exp.start_date }} — {{ exp.end_date.split(' ')[-1] if not exp.present and ' ' in exp.end_date else 'PRES' }}</span>
+                            <div style="font-weight: 800; font-size: 1.3rem; margin-top: 5px;">{{ exp.role }}</div>
+                            <div style="font-weight: 600; opacity: 0.5;">{{ exp.company }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </main>
+            </div>
+        </body>
+        </html>
+        """
 
         self.templates = {
             "modern": modern,
@@ -455,10 +626,13 @@ class TemplateEngine:
             "professional-light": professional_light,
             "professional-dark": professional_dark,
             "professional-modern": professional_modern,
-            "eye-catching": eye_catching
+            "eye-catching": eye_catching,
+            "dev-focus": dev_focus,
+            "executive-blue": executive_blue,
+            "minimal-grid": minimal_grid
         }
 
-        # Expansion to 15 templates by variants/aliases
+        # Expansion to 20 templates by variants/aliases
         self.template_list = [
             {"id": "professional-light-v1", "name": "Ivory Archive", "category": "Professional-Light", "alias": "professional-light"},
             {"id": "professional-light-v2", "name": "Minimal Academic", "category": "Professional-Light", "alias": "professional-light"},
@@ -472,9 +646,14 @@ class TemplateEngine:
             {"id": "eye-catching-v1", "name": "Rose Curator", "category": "Eye-Catching", "alias": "eye-catching"},
             {"id": "eye-catching-v2", "name": "Vibrant Portfolio", "category": "Eye-Catching", "alias": "eye-catching"},
             {"id": "eye-catching-v3", "name": "Creative Surge", "category": "Eye-Catching", "alias": "eye-catching"},
-            {"id": "classic", "name": "Standard Times", "category": "Professional-Light", "alias": "classic"},
-            {"id": "modern", "name": "Default Spark", "category": "Professional-Modern", "alias": "modern"},
-            {"id": "legacy", "name": "Old Style", "category": "Professional-Light", "alias": "classic"}
+            {"id": "dev-focus-v1", "name": "Kernel Architect", "category": "Tech-Special", "alias": "dev-focus"},
+            {"id": "dev-focus-v2", "name": "Fullstack Cloud", "category": "Tech-Special", "alias": "dev-focus"},
+            {"id": "executive-blue-v1", "name": "Blue Chip Leader", "category": "Executive", "alias": "executive-blue"},
+            {"id": "executive-blue-v2", "name": "Royal Corporate", "category": "Executive", "alias": "executive-blue"},
+            {"id": "minimal-grid-v1", "name": "Grid Curator", "category": "Minimalist", "alias": "minimal-grid"},
+            {"id": "minimal-grid-v2", "name": "Swiss Type", "category": "Minimalist", "alias": "minimal-grid"},
+            {"id": "classic", "name": "Standard Times", "category": "Clásico", "alias": "classic"},
+            {"id": "modern", "name": "Default Spark", "category": "Moderno", "alias": "modern"},
         ]
 
     def render_cv_html(self, cv_data: dict, template_id: str = "professional-modern-v1") -> str:
