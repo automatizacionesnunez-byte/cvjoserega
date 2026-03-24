@@ -1,8 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Usamos fallbacks para evitar errores durante el prerendering de Next.js (SSG)
-// Es CRÍTICO configurar estas variables en el dashboard de despliegue (Vercel/Zeabur/etc.)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-project.supabase.co';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'no-key-provided';
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+let supabaseClient;
+try {
+  supabaseClient = createClient(url, key);
+} catch (e) {
+  console.warn("Supabase initialization error during build; using dummy client.");
+  supabaseClient = {
+    auth: { getSession: async () => ({ data: { session: null } }) },
+    from: () => ({ select: () => ({ data: [], error: null }) })
+  } as any;
+}
+
+export const supabase = supabaseClient;

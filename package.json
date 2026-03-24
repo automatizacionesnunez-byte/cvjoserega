@@ -10,13 +10,16 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.100.0",
+    "autoprefixer": "^10.4.27",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.0.1",
     "next": "16.1.7",
+    "postcss": "^8.5.8",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwind-merge": "^3.5.0"
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
     "@types/node": "^20",
