@@ -1,0 +1,19 @@
+# Frontend
+frontend/node_modules
+frontend/.next
+frontend/.env.local
+frontend/public/generated
+
+# Backend
+backend/venv
+backend/__pycache__
+backend/.env
+backend/*.pyc
+backend/.pytest_cache
+
+# OS
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+*.log
