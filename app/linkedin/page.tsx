@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Linkedin, RefreshCw, CheckCircle2, AlertCircle, Sparkles, ArrowRight, Target, TrendingUp, Eye } from 'lucide-react';
+import { Link as LinkIcon, RefreshCw, CheckCircle2, AlertCircle, Sparkles, ArrowRight, Target, TrendingUp, Eye } from 'lucide-react';
 
 import { API_BASE_URL } from '../lib/api';
 
@@ -43,7 +43,7 @@ export default function LinkedInOptimizer() {
   );
 
   return (
-    <div className="space-y-10 animate-fade pb-20">
+    <div className="space-y-10 animate-fade pb-20 mt-10">
       <div>
         <h1 className="text-3xl font-bold mb-2">Optimizador de <span className="text-blue-400">LinkedIn</span></h1>
         <p className="text-slate-400">Analiza tu perfil y recibe sugerencias AI para maximizar tu visibilidad.</p>
@@ -51,10 +51,10 @@ export default function LinkedInOptimizer() {
 
       {!results ? (
         <div className="max-w-2xl mx-auto">
-          <div className="glass-card p-10 space-y-8">
+          <div className="glass-card p-10 space-y-10 border-blue-500/10">
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center">
-                <Linkedin className="text-blue-400" size={32} />
+              <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shadow-xl shadow-blue-500/10">
+                <LinkIcon className="text-blue-400" size={32} />
               </div>
               <h3 className="text-xl font-bold">Analiza tu Perfil</h3>
               <p className="text-sm text-slate-400 max-w-sm">Pega la URL de tu perfil de LinkedIn. La IA evaluará cada sección y te dará recomendaciones accionables.</p>

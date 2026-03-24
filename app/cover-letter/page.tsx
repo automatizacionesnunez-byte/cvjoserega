@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Sparkles,
   Copy
+} from 'lucide-react';
 import { API_BASE_URL } from '../lib/api';
 
 export default function CoverLetter() {
