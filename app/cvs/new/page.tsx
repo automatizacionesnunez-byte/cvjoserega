@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Upload, 
@@ -11,7 +11,8 @@ import {
   AlertCircle,
   FileText,
   RefreshCw,
-  Save
+  Save,
+  Rocket
 } from 'lucide-react';
 import CVPreview from '@/app/components/dashboard/CVPreview';
 import { supabase } from '@/app/lib/supabase';
@@ -25,7 +26,11 @@ export default function NewCV() {
   const [cvFile, setCvFile] = useState<File | null>(null);
   const [analysis, setAnalysis] = useState<any>(null);
   const [selectedTemplate, setSelectedTemplate] = useState('modern');
-  const [userId, setUserId] = useState<string>('demo-user-123');
+  const [isGuest, setIsGuest] = useState(false);
+
+  useEffect(() => {
+    setIsGuest(localStorage.getItem('cvpilot_guest_mode') === 'true');
+  }, []);
 
   const wizardCategories = ['Todos', 'Clásico', 'Moderno', 'Tech', 'Creativo'];
 
@@ -50,9 +55,9 @@ export default function NewCV() {
     setSaving(true);
     try {
       const { data: sessionData } = await supabase.auth.getSession();
-      const currentUid = sessionData.session?.user?.id || userId;
+      const currentUid = sessionData.session?.user?.id || (isGuest ? 'guest-001' : 'demo-user-123');
       
-      await fetch(`${API_BASE_URL}/api/cvs/`, {
+      const res = await fetch(`${API_BASE_URL}/api/cvs/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -62,11 +67,14 @@ export default function NewCV() {
           title: `CV Optimizado - ${new Date().toLocaleDateString()}`
         })
       });
-      alert("CV Guardado en tu Dashboard.");
+      
+      if (!res.ok) throw new Error("Error al guardar");
+
+      alert(isGuest ? "AVISO BETA: CV Guardado en la sesión de invitado." : "CV Guardado en tu Dashboard.");
       window.location.href = '/dashboard';
     } catch (err) {
       console.error(err);
-      alert("Error al guardar CV.");
+      alert("Error al guardar CV. ¿Está el backend encendido?");
     } finally {
       setSaving(false);
     }
@@ -98,63 +106,71 @@ export default function NewCV() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-10">
+    <div className="max-w-6xl mx-auto py-10 px-6">
+      {isGuest && (
+        <div className="mb-10 p-4 rounded-3xl bg-indigo-500/5 border border-indigo-500/10 flex items-center justify-center gap-3">
+           <Rocket size={18} className="text-indigo-400" />
+           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">Modo Beta: Prueba todas las funciones sin limites.</p>
+        </div>
+      )}
+
       {/* Steps Indicator */}
-      <div className="flex items-center justify-center gap-4 mb-16">
+      <div className="flex items-center justify-center gap-6 mb-20">
         {[1, 2, 3, 4].map((s) => (
-          <div key={s} className="flex items-center gap-4">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${step >= s ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20' : 'bg-white/5 text-slate-500 border border-white/10'}`}>
-              {s}
+          <div key={s} className="flex items-center gap-6">
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black transition-all ${step >= s ? 'bg-white text-black shadow-2xl shadow-white/5' : 'bg-white/5 text-slate-700 border border-white/5'}`}>
+              0{s}
             </div>
-            {s < 4 && <div className={`w-12 h-0.5 rounded-full ${step > s ? 'bg-purple-500' : 'bg-white/10'}`} />}
+            {s < 4 && <div className={`w-16 h-px ${step > s ? 'bg-white/20' : 'bg-white/5'}`} />}
           </div>
         ))}
       </div>
 
       <AnimatePresence mode="wait">
         {step === 1 && (
-          <motion.div key="step1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-10">
-            <div className="text-center space-y-3">
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight">Elige tu <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">plantilla</span></h1>
-              <p className="text-slate-500 text-sm max-w-md mx-auto">Selecciona el estilo que mejor represente tu perfil profesional.</p>
+          <motion.div key="step1" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} className="space-y-12">
+            <div className="text-center space-y-4">
+              <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase leading-none">Estilo <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Ejecutivo</span></h1>
+              <p className="text-slate-500 text-lg font-medium max-w-md mx-auto italic">Selecciona el chasis de tu nueva carrera profesional.</p>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="flex flex-wrap justify-center gap-3">
               {wizardCategories.map(cat => (
-                <button key={cat} onClick={() => setWizardFilter(cat)} className={`px-5 py-2 rounded-full text-sm font-semibold border transition-all ${wizardFilter === cat ? 'bg-purple-600 text-white border-purple-500 shadow-lg shadow-purple-500/20' : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10 hover:text-white'}`}>
+                <button key={cat} onClick={() => setWizardFilter(cat)} className={`px-6 py-2.5 rounded-full text-[10px] font-black tracking-widest uppercase border transition-all ${wizardFilter === cat ? 'bg-white text-black border-white shadow-xl shadow-white/5' : 'bg-white/5 text-slate-500 border-white/5 hover:text-white'}`}>
                   {cat}
                 </button>
               ))}
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
               <AnimatePresence mode="popLayout">
                 {filteredWizardTemplates.map((tpl) => {
                   const textColor = tpl.dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.3)';
                   const headColor = tpl.dark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.8)';
                   const lineColor = tpl.dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
                   return (
-                    <motion.div key={tpl.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} whileHover={{ y: -4 }} onClick={() => setSelectedTemplate(tpl.id)} className="cursor-pointer group">
-                      <div className={`aspect-[3/4] w-full rounded-2xl overflow-hidden transition-all duration-200 ${selectedTemplate === tpl.id ? 'ring-[3px] ring-purple-500 ring-offset-4 ring-offset-[#020203] shadow-2xl shadow-purple-500/20' : 'ring-1 ring-white/10 group-hover:ring-2 group-hover:ring-white/20'}`}>
-                        <div className={`w-full h-full bg-gradient-to-br ${tpl.gradient} p-4 flex flex-col`}>
-                          <div className="h-[8px] rounded-full mb-1" style={{ width: '50%', backgroundColor: headColor }} />
-                          <div className="h-[5px] rounded-full mb-2" style={{ width: '30%', backgroundColor: textColor }} />
-                          <div className="h-px w-full mb-2" style={{ backgroundColor: lineColor }} />
-                          <div className="flex gap-2 flex-1">
-                            <div className="flex-1 space-y-1.5">
-                              <div className="h-[5px] rounded-full" style={{ width: '35%', backgroundColor: tpl.accent, opacity: 0.8 }} />
-                              <div className="h-[4px] rounded-full" style={{ width: '85%', backgroundColor: textColor }} />
-                              <div className="h-[4px] rounded-full" style={{ width: '70%', backgroundColor: textColor }} />
+                    <motion.div key={tpl.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} whileHover={{ y: -8 }} onClick={() => setSelectedTemplate(tpl.id)} className="cursor-pointer group flex flex-col items-center">
+                      <div className={`aspect-[3/4] w-full rounded-[28px] overflow-hidden transition-all duration-300 ${selectedTemplate === tpl.id ? 'ring-2 ring-indigo-500 ring-offset-4 ring-offset-[#020203] shadow-[0_0_40px_rgba(99,102,241,0.2)]' : 'ring-1 ring-white/5 group-hover:ring-white/20 opacity-60 hover:opacity-100'}`}>
+                        <div className={`w-full h-full bg-gradient-to-br ${tpl.gradient} p-5 flex flex-col`}>
+                          <div className="h-[10px] rounded-full mb-1.5" style={{ width: '60%', backgroundColor: headColor }} />
+                          <div className="h-[6px] rounded-full mb-4" style={{ width: '40%', backgroundColor: textColor }} />
+                          <div className="h-px w-full mb-4" style={{ backgroundColor: lineColor }} />
+                          <div className="flex gap-4 flex-1">
+                            <div className="flex-1 space-y-2">
+                              <div className="h-[6px] rounded-full" style={{ width: '40%', backgroundColor: tpl.accent, opacity: 0.8 }} />
+                              <div className="h-[5px] rounded-full" style={{ width: '90%', backgroundColor: textColor }} />
+                              <div className="h-[5px] rounded-full" style={{ width: '80%', backgroundColor: textColor }} />
+                              <div className="h-[5px] rounded-full" style={{ width: '95%', backgroundColor: textColor }} />
                             </div>
-                            <div className="w-[30%] space-y-1.5">
-                              <div className="h-[4px] rounded-full" style={{ width: '80%', backgroundColor: textColor }} />
+                            <div className="w-[30%] space-y-2">
+                              <div className="h-[5px] rounded-full" style={{ width: '100%', backgroundColor: textColor }} />
+                              <div className="h-4 w-4 rounded-lg self-end" style={{ backgroundColor: tpl.accent, opacity: 0.4 }} />
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div className="mt-2.5 px-0.5">
-                        <h3 className={`text-sm font-semibold transition-colors ${selectedTemplate === tpl.id ? 'text-purple-400' : 'text-slate-300 group-hover:text-white'}`}>{tpl.name}</h3>
-                        <p className="text-[10px] text-slate-600">{tpl.category}</p>
+                      <div className="mt-6 text-center">
+                        <h3 className={`text-xs font-black uppercase tracking-tighter transition-colors ${selectedTemplate === tpl.id ? 'text-white' : 'text-slate-500'}`}>{tpl.name}</h3>
                       </div>
                     </motion.div>
                   );
@@ -162,91 +178,118 @@ export default function NewCV() {
               </AnimatePresence>
             </div>
 
-            <button onClick={() => setStep(2)} className="w-full py-5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl font-bold text-lg shadow-xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all uppercase tracking-widest">
-              Continuar con {wizardTemplates.find(t => t.id === selectedTemplate)?.name || 'plantilla'}
-              <ArrowRight size={20} />
+            <button onClick={() => setStep(2)} className="w-full py-6 bg-white text-black rounded-[24px] font-black text-xs uppercase tracking-[0.3em] shadow-2xl shadow-white/5 hover:scale-[1.01] active:scale-[0.98] transition-all flex items-center justify-center gap-4">
+              Configurar Inteligencia
+              <ArrowRight size={20} className="stroke-[3]" />
             </button>
           </motion.div>
         )}
 
         {step === 2 && (
-          <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-8">
-            <div className="text-center space-y-4 mb-12">
-              <h1 className="text-4xl font-extrabold tracking-tight">Optimiza tu <span className="text-indigo-400">Futuro</span></h1>
-              <p className="text-slate-400 text-lg max-w-xl mx-auto">Sube tu CV actual y pega la oferta que deseas. Nuestra IA hará el resto.</p>
+          <motion.div key="step2" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} className="space-y-12 max-w-4xl mx-auto">
+            <div className="text-center space-y-4 mb-16">
+              <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase">Inyección de <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Datos</span></h1>
+              <p className="text-slate-500 text-lg font-medium italic">Sincroniza tu perfil con el mercado en segundos.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="glass-card p-8 group hover:border-indigo-500/30 transition-all cursor-pointer relative overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="group relative p-12 rounded-[40px] bg-white/[0.01] border border-white/5 hover:border-indigo-500/20 transition-all cursor-pointer overflow-hidden text-center">
                 <input type="file" accept=".pdf" onChange={(e) => setCvFile(e.target.files?.[0] || null)} className="absolute inset-0 opacity-0 cursor-pointer z-20" />
-                <div className="flex flex-col items-center text-center space-y-4">
-                  <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 flex items-center justify-center group-hover:scale-110 transition-transform"><Upload className="text-indigo-400" size={32} /></div>
-                  <h3 className="text-xl font-bold">Currículum (PDF)</h3>
-                  <p className="text-slate-400 text-sm">Arrastra tu archivo o haz clic para subir.</p>
-                  {cvFile && <span className="text-emerald-400 font-medium flex items-center gap-2 mt-2 bg-emerald-500/10 px-3 py-1 rounded-full text-xs"><CheckCircle2 size={14} /> {cvFile.name}</span>}
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="w-20 h-20 rounded-[28px] bg-white/5 flex items-center justify-center mb-8 border border-white/5 group-hover:scale-110 group-hover:bg-indigo-500/10 transition-all">
+                    <Upload className="text-slate-400 group-hover:text-indigo-400 transition-colors" size={36} />
+                  </div>
+                  <h3 className="text-2xl font-black text-white mb-4 uppercase tracking-tighter">Currículum Principal</h3>
+                  <p className="text-slate-500 font-medium leading-relaxed">Arrastra tu PDF para empezar el escaneo.</p>
+                  {cvFile && <span className="text-emerald-400 font-black text-[10px] uppercase tracking-widest mt-6 bg-emerald-500/10 px-4 py-2 rounded-full border border-emerald-500/20">{cvFile.name}</span>}
                 </div>
               </div>
 
-              <div className="glass-card p-8 group hover:border-purple-500/30 transition-all">
-                <div className="flex flex-col items-center text-center space-y-4">
-                  <div className="w-16 h-16 rounded-2xl bg-purple-500/10 flex items-center justify-center group-hover:scale-110 transition-transform"><Globe className="text-purple-400" size={32} /></div>
-                  <h3 className="text-xl font-bold">Oferta de Trabajo</h3>
-                  <p className="text-slate-400 text-sm">Pega la URL de LinkedIn o InfoJobs.</p>
-                  <input type="url" value={jobUrl} onChange={(e) => setJobUrl(e.target.value)} placeholder="https://linkedin.com/jobs/..." className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-purple-500/50 transition-colors text-sm" />
+              <div className="p-12 rounded-[40px] bg-white/[0.01] border border-white/5 space-y-10 group overflow-hidden relative">
+                <div className="flex flex-col items-center text-center relative z-10">
+                  <div className="w-20 h-20 rounded-[28px] bg-white/5 flex items-center justify-center mb-8 border border-white/5 group-focus-within:bg-purple-500/10 transition-all">
+                    <Globe className="text-slate-400 group-focus-within:text-purple-400 transition-colors" size={36} />
+                  </div>
+                  <h3 className="text-2xl font-black text-white mb-4 uppercase tracking-tighter">URL de la Oferta</h3>
+                  <p className="text-slate-500 font-medium mb-8 italic text-sm">Copia el enlace de LinkedIn o InfoJobs.</p>
+                  <input type="url" value={jobUrl} onChange={(e) => setJobUrl(e.target.value)} placeholder="https://..." className="w-full bg-[#0a0a0c] border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-purple-500/50 transition-all text-sm font-medium text-white shadow-inner" />
                 </div>
               </div>
             </div>
 
-            <button onClick={handleProcess} disabled={loading || !cvFile || !jobUrl} className="w-full py-5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl font-bold text-lg shadow-xl shadow-purple-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3 uppercase tracking-widest">
-              {loading ? <><RefreshCw className="animate-spin" size={24} /> Analizando con IA...</> : <><BrainCircuit size={24} /> Empezar Optimización</>}
+            <button onClick={handleProcess} disabled={loading || !cvFile || !jobUrl} className={`w-full py-6 rounded-[28px] font-black text-xs uppercase tracking-[0.4em] shadow-2xl transition-all flex items-center justify-center gap-4 ${loading ? 'bg-white/5 text-slate-500' : 'bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 shadow-indigo-500/20'}`}>
+              {loading ? <RefreshCw className="animate-spin" size={20} /> : <BrainCircuit size={20} className="stroke-[2.5]" />}
+              {loading ? 'Digeriendo Información...' : 'Lanzar Análisis AI'}
             </button>
           </motion.div>
         )}
 
         {step === 3 && analysis && (
-          <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-10">
-            <div className="flex items-center justify-between">
-              <div><h2 className="text-3xl font-bold mb-2">Análisis de <span className="text-emerald-400">Match</span></h2><p className="text-slate-400">Nuestro HR-Expert ha detectado los siguientes gaps.</p></div>
-              <div className="flex items-center gap-3 bg-white/5 px-6 py-4 rounded-3xl border border-white/10">
-                <span className="text-slate-400 font-medium">Score</span><span className="text-4xl font-black text-emerald-400">{analysis.match_score}%</span>
+          <motion.div key="step3" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-12">
+            <div className="flex flex-col md:flex-row items-end justify-between gap-10">
+              <div className="max-w-xl">
+                <h2 className="text-5xl font-black text-white tracking-tighter uppercase mb-4 leading-none">Veredicto <br/> de la IA</h2>
+                <p className="text-slate-500 text-lg font-medium italic">Análisis granular de competitividad.</p>
+              </div>
+              <div className="p-8 rounded-[40px] bg-white/[0.02] border border-white/5 flex items-baseline gap-3 shadow-2xl">
+                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Match Score</span>
+                 <span className="text-8xl font-black text-white leading-none tracking-tighter">{analysis.match_score}%</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="glass-card p-6 border-emerald-500/20 bg-emerald-500/5">
-                <h3 className="font-bold text-lg mb-6 flex items-center gap-3"><CheckCircle2 className="text-emerald-400" size={20} /> Fortalezas</h3>
-                <ul className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="p-10 rounded-[48px] border border-emerald-500/10 bg-emerald-500/[0.02] hover:bg-emerald-500/[0.04] transition-all group">
+                <div className="flex items-center gap-4 mb-10">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <CheckCircle2 className="text-emerald-400" size={24} />
+                  </div>
+                  <h3 className="text-xl font-black text-white uppercase tracking-tighter">Puntos de Éxito</h3>
+                </div>
+                <ul className="space-y-4">
                   {analysis.strengths.map((s: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2 text-slate-300 text-sm"><div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />{s}</li>
+                    <li key={i} className="flex items-start gap-4 text-slate-400 font-medium leading-relaxed group-hover:text-emerald-50/70 transition-colors">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 mt-2 shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                      {s}
+                    </li>
                   ))}
                 </ul>
               </div>
-              <div className="glass-card p-6 border-amber-500/20 bg-amber-500/5">
-                <h3 className="font-bold text-lg mb-6 flex items-center gap-3"><AlertCircle className="text-amber-400" size={20} /> Debilidades</h3>
-                <ul className="space-y-3">
+
+              <div className="p-10 rounded-[48px] border border-amber-500/10 bg-amber-500/[0.02] hover:bg-amber-500/[0.04] transition-all group">
+                <div className="flex items-center gap-4 mb-10">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <AlertCircle className="text-amber-400" size={24} />
+                  </div>
+                  <h3 className="text-xl font-black text-white uppercase tracking-tighter">Campos de Mejora</h3>
+                </div>
+                <ul className="space-y-4">
                   {analysis.weaknesses.map((w: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2 text-slate-300 text-sm"><div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />{w}</li>
+                    <li key={i} className="flex items-start gap-4 text-slate-400 font-medium leading-relaxed group-hover:text-amber-50/70 transition-colors">
+                      <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 shrink-0 shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+                      {w}
+                    </li>
                   ))}
                 </ul>
               </div>
             </div>
 
-            <button onClick={() => setStep(4)} className="w-full py-5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl font-bold text-lg shadow-xl hover:scale-[1.02] transition-all flex items-center justify-center gap-3 uppercase tracking-widest">
-              Generar CV Optimizado AI <ArrowRight size={20} />
+            <button onClick={() => setStep(4)} className="w-full py-7 bg-white text-black rounded-[32px] font-black text-sm uppercase tracking-[0.4em] shadow-2xl hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+              Materializar Currículum Optimizado
+              <ArrowRight size={24} className="stroke-[3]" />
             </button>
           </motion.div>
         )}
 
         {step === 4 && analysis && (
-          <div className="space-y-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
             <CVPreview cvData={analysis.parsedCV} template={selectedTemplate} />
-            <div className="flex gap-4 pt-8">
-               <button onClick={() => setStep(3)} className="flex-1 py-4 bg-white/5 hover:bg-white/10 rounded-2xl font-bold border border-white/10 transition-all uppercase tracking-widest text-xs">Atrás</button>
-               <button onClick={handleSaveToDB} disabled={saving} className="flex-[2] py-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl font-black shadow-xl hover:scale-[1.02] transition-all flex items-center justify-center gap-3 uppercase tracking-widest text-xs">
-                  {saving ? <RefreshCw className="animate-spin" size={18} /> : <Save size={18} />} {saving ? 'Sincronizando...' : 'Guardar en mi Historial'}
+            <div className="flex flex-col sm:flex-row gap-6">
+               <button onClick={() => setStep(3)} className="flex-1 py-6 bg-white/5 hover:bg-white/10 rounded-[24px] font-black border border-white/5 transition-all uppercase tracking-widest text-[10px] text-slate-500 hover:text-white">Atrás</button>
+               <button onClick={handleSaveToDB} disabled={saving} className="flex-[2] py-6 bg-indigo-600 text-white rounded-[24px] font-black shadow-2xl hover:bg-indigo-700 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 uppercase tracking-[0.3em] text-[10px] shadow-indigo-500/20">
+                  {saving ? <RefreshCw className="animate-spin" size={20} /> : <Save size={20} className="stroke-[2.5]" />} {saving ? 'Sincronizando...' : 'Publicar en mi Historial'}
                </button>
             </div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
