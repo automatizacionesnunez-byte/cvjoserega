@@ -1,61 +1,36 @@
-# CV-Pilot SaaS - Guía de Despliegue en Producción 🚀
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Este repositorio contiene el código completo para desplegar **CV-Pilot** en cualquier VPS (Virtual Private Server) usando Docker.
+## Getting Started
 
-## 🏗️ Requisitos en el Servidor
-- **Docker** y **Docker Compose** instalados.
-- Un subdominio o IP pública accesible.
-- Claves de **Supabase** (URL y Anon Key).
-- Clave de **OpenAI Compatible API** (SiliconFlow, DeepSeek, etc.).
-
-## 🛠️ Configuración (Pasos Obligatorios)
-
-### 1. Variables de Entorno del Sistema
-Crea un archivo `.env` en la raíz del proyecto para que Docker Compose pueda leer las variables de construcción del frontend:
+First, run the development server:
 
 ```bash
-# Archivo: .env (en la raíz)
-NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key_de_supabase
-NEXT_PUBLIC_API_URL=http://tu-ip-o-dominio:8000
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-### 2. Variables del Backend
-Crea un archivo `.env` dentro de la carpeta `backend/`:
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-```bash
-# Archivo: backend/.env
-OPENAI_API_KEY=tu_api_key
-OPENAI_BASE_URL=https://api.siliconflow.cn/v1 # O el de tu proveedor
-OPENAI_MODEL=deepseek-v3.1:671b-cloud
-SUPABASE_URL=tu_supabase_url
-SUPABASE_SERVICE_KEY=tu_service_role_key
-```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## 🚀 Despliegue con Un Solo Comando
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-Desde la raíz del proyecto:
+## Learn More
 
-```bash
-docker-compose up -d --build
-```
+To learn more about Next.js, take a look at the following resources:
 
-Esto hará:
-1.  **Construir el Frontend**: Compilará Next.js (esto puede tardar unos minutos).
-2.  **Construir el Backend**: Instalará Python y los drivers de scraping.
-3.  **Iniciar**: Los servicios estarán disponibles en los puertos **3000** (Web) y **8000** (API).
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## 🛡️ Configuración de Proxy (Recomendado)
-Para producción, se recomienda usar **Nginx** o **Caddy** como proxy inverso para habilitar HTTPS (SSL) y mapear los puertos a nombres de dominio:
-- `cvpilot.com` -> Puerto 3000
-- `api.cvpilot.com` -> Puerto 8000
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
----
+## Deploy on Vercel
 
-## 🔧 Mantenimiento
-- **Ver Logs**: `docker-compose logs -f`
-- **Detener**: `docker-compose down`
-- **Actualizar**: `git pull origin main && docker-compose up -d --build`
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
----
-*Hecho para el equipo de Automatizaciones Nuñez Byte. Built for Winners.*
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

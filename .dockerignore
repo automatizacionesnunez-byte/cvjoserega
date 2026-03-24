@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+backend
+frontend
+Dockerfile
+docker-compose.yml
+README.md
+.env.local
+.vscode
+.idea
+*.log
