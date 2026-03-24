@@ -162,40 +162,54 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
               { 
-                title: 'Auditoría HR-AI', 
-                desc: 'Análisis profundo de palabras clave, estructura y verbos de acción para superar cualquier ATS.', 
+                title: 'Auditor&iacute;a HR-AI', 
+                desc: 'An\u00e1lisis profundo de palabras clave, estructura y verbos de acci\u00f3n para superar cualquier ATS.', 
                 icon: BrainCircuit, 
                 color: 'text-indigo-400',
-                border: 'border-indigo-500/20 shadow-indigo-500/5'
+                glow: 'from-indigo-500/10 to-transparent',
+                border: 'hover:border-indigo-500/40'
               },
               { 
-                title: 'Lead Intelligence', 
-                desc: 'Identifica a los "hiring managers" directamente y obtén sus perfiles verificados.', 
+                title: 'Strategic Lead Search', 
+                desc: 'Identifica a los hiring managers directamente y obt&eacute;n sus perfiles verificados.', 
                 icon: Search, 
                 color: 'text-purple-400',
-                border: 'border-purple-500/20 shadow-purple-500/5'
+                glow: 'from-purple-500/10 to-transparent',
+                border: 'hover:border-purple-500/40'
               },
               { 
-                title: 'PDF Engine 2.0', 
-                desc: 'Descarga PDFs Premium con diseños que destacan entre miles de aplicaciones.', 
+                title: 'Exportaci&oacute;n HD', 
+                desc: 'Descarga PDFs Premium con dise&ntilde;os que destacan entre miles de aplicaciones.', 
                 icon: FileCheck, 
                 color: 'text-emerald-400',
-                border: 'border-emerald-500/20 shadow-emerald-500/5'
+                glow: 'from-emerald-500/10 to-transparent',
+                border: 'hover:border-emerald-500/40'
               }
             ].map((feature, i) => (
               <motion.div 
                 key={i}
-                whileHover={{ y: -10 }}
-                className={`group relative p-12 rounded-[40px] bg-white/[0.01] border ${feature.border} hover:bg-white/[0.04] transition-all shadow-2xl`}
+                whileHover={{ y: -8, scale: 1.02 }}
+                className={`group relative p-12 rounded-[48px] bg-[#0a0a0c] border border-white/5 ${feature.border} transition-all duration-500 overflow-hidden shadow-2xl`}
               >
-                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                  <feature.icon size={120} />
+                {/* Glow Background */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${feature.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                
+                {/* Decorative Pattern */}
+                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-20 group-hover:rotate-12 transition-all duration-700">
+                  <feature.icon size={160} className="stroke-[1]" />
                 </div>
-                <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mb-12 shadow-inner group-hover:scale-110 transition-transform">
-                  <feature.icon className={feature.color} size={40} />
+
+                <div className="relative z-10">
+                  <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mb-12 shadow-inner group-hover:bg-white/10 transition-all border border-white/5">
+                    <feature.icon className={feature.color} size={40} strokeWidth={1.5} />
+                  </div>
+                  <h3 className="text-3xl font-black text-white mb-6 uppercase tracking-tighter leading-none">{feature.title}</h3>
+                  <p className="text-slate-500 leading-relaxed font-medium text-lg leading-relaxed">{feature.desc}</p>
+                  
+                  <div className="mt-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
+                    Probar ahora <ArrowRight size={14} />
+                  </div>
                 </div>
-                <h3 className="text-3xl font-black text-white mb-6 uppercase tracking-tight">{feature.title}</h3>
-                <p className="text-slate-400 leading-relaxed font-medium text-lg">{feature.desc}</p>
               </motion.div>
             ))}
           </div>
