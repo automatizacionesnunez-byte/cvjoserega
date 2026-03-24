@@ -26,12 +26,17 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY --from=builder /app/next.config.ts ./
+# Re-copy public and static assets
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/.next/static ./.next/static
+
+# Next.js standalone mode (outputs to .next/standalone/server.js)
+COPY --from=builder /app/.next/standalone ./
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+# Change server.js entry point (standard for standalone)
+CMD ["node", "server.js"]
