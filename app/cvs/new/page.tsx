@@ -145,32 +145,70 @@ export default function NewCV() {
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
               <AnimatePresence mode="popLayout">
                 {filteredWizardTemplates.map((tpl) => {
-                  const textColor = tpl.dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.3)';
+                  const textColor = tpl.dark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.3)';
                   const headColor = tpl.dark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.8)';
                   const lineColor = tpl.dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
+                  
                   return (
-                    <motion.div key={tpl.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} whileHover={{ y: -8 }} onClick={() => setSelectedTemplate(tpl.id)} className="cursor-pointer group flex flex-col items-center">
-                      <div className={`aspect-[3/4] w-full rounded-[28px] overflow-hidden transition-all duration-300 ${selectedTemplate === tpl.id ? 'ring-2 ring-indigo-500 ring-offset-4 ring-offset-[#020203] shadow-[0_0_40px_rgba(99,102,241,0.2)]' : 'ring-1 ring-white/5 group-hover:ring-white/20 opacity-60 hover:opacity-100'}`}>
-                        <div className={`w-full h-full bg-gradient-to-br ${tpl.gradient} p-5 flex flex-col`}>
-                          <div className="h-[10px] rounded-full mb-1.5" style={{ width: '60%', backgroundColor: headColor }} />
-                          <div className="h-[6px] rounded-full mb-4" style={{ width: '40%', backgroundColor: textColor }} />
-                          <div className="h-px w-full mb-4" style={{ backgroundColor: lineColor }} />
-                          <div className="flex gap-4 flex-1">
-                            <div className="flex-1 space-y-2">
-                              <div className="h-[6px] rounded-full" style={{ width: '40%', backgroundColor: tpl.accent, opacity: 0.8 }} />
-                              <div className="h-[5px] rounded-full" style={{ width: '90%', backgroundColor: textColor }} />
-                              <div className="h-[5px] rounded-full" style={{ width: '80%', backgroundColor: textColor }} />
-                              <div className="h-[5px] rounded-full" style={{ width: '95%', backgroundColor: textColor }} />
+                    <motion.div 
+                      key={tpl.id} 
+                      layout 
+                      initial={{ opacity: 0, scale: 0.9 }} 
+                      animate={{ opacity: 1, scale: 1 }} 
+                      exit={{ opacity: 0, scale: 0.9 }} 
+                      whileHover={{ y: -8 }} 
+                      onClick={() => setSelectedTemplate(tpl.id)} 
+                      className="cursor-pointer group flex flex-col items-center"
+                    >
+                      <div className={`aspect-[3/4] w-full rounded-[24px] overflow-hidden transition-all duration-300 ${selectedTemplate === tpl.id ? 'ring-2 ring-indigo-500 ring-offset-4 ring-offset-[#020203] shadow-[0_0_40px_rgba(99,102,241,0.2)]' : 'ring-1 ring-white/5 group-hover:ring-white/20 opacity-80 hover:opacity-100'}`}>
+                        {/* Realistic Resume Simulation */}
+                        <div className={`w-full h-full bg-gradient-to-br ${tpl.gradient} p-4 flex flex-col`}>
+                          {/* Header Area */}
+                          <div className="flex items-start gap-3 mb-4">
+                            <div className="w-8 h-8 rounded-full bg-white/20 shrink-0 border border-white/10" />
+                            <div className="flex-1 space-y-1.5 pt-1">
+                               <div className="h-2 rounded-full" style={{ width: '80%', backgroundColor: headColor }} />
+                               <div className="h-1 rounded-full" style={{ width: '40%', backgroundColor: textColor }} />
                             </div>
-                            <div className="w-[30%] space-y-2">
-                              <div className="h-[5px] rounded-full" style={{ width: '100%', backgroundColor: textColor }} />
-                              <div className="h-4 w-4 rounded-lg self-end" style={{ backgroundColor: tpl.accent, opacity: 0.4 }} />
+                          </div>
+
+                          <div className="h-px w-full mb-4" style={{ backgroundColor: lineColor }} />
+
+                          {/* Columns */}
+                          <div className="flex gap-4 flex-1">
+                            {/* Left Col (Main content) */}
+                            <div className="flex-1 space-y-3">
+                              <div className="space-y-1.5">
+                                <div className="h-1.5 rounded-full" style={{ width: '30%', backgroundColor: tpl.accent, opacity: 0.6 }} />
+                                <div className="h-1 rounded-full" style={{ width: '90%', backgroundColor: textColor }} />
+                                <div className="h-1 rounded-full" style={{ width: '100%', backgroundColor: textColor }} />
+                                <div className="h-1 rounded-full" style={{ width: '85%', backgroundColor: textColor }} />
+                              </div>
+                              <div className="space-y-1.5">
+                                <div className="h-1.5 rounded-full" style={{ width: '40%', backgroundColor: tpl.accent, opacity: 0.6 }} />
+                                <div className="h-1 rounded-full" style={{ width: '95%', backgroundColor: textColor }} />
+                                <div className="h-1 rounded-full" style={{ width: '80%', backgroundColor: textColor }} />
+                              </div>
+                            </div>
+                            
+                            {/* Right Col (Sidebar) */}
+                            <div className="w-[30%] space-y-3 border-l px-2" style={{ borderColor: lineColor }}>
+                               <div className="space-y-1.5">
+                                  <div className="h-1.5 rounded-full" style={{ width: '100%', backgroundColor: tpl.accent, opacity: 0.4 }} />
+                                  <div className="h-1 rounded-full" style={{ width: '80%', backgroundColor: textColor }} />
+                                  <div className="h-1 rounded-full" style={{ width: '60%', backgroundColor: textColor }} />
+                               </div>
+                               <div className="space-y-1.5">
+                                  <div className="h-1.5 rounded-full" style={{ width: '100%', backgroundColor: tpl.accent, opacity: 0.4 }} />
+                                  <div className="h-1 rounded-full" style={{ width: '70%', backgroundColor: textColor }} />
+                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div className="mt-6 text-center">
-                        <h3 className={`text-xs font-black uppercase tracking-tighter transition-colors ${selectedTemplate === tpl.id ? 'text-white' : 'text-slate-500'}`}>{tpl.name}</h3>
+                      <div className="mt-5 text-center px-1">
+                        <h3 className={`text-[10px] font-black uppercase tracking-widest transition-colors ${selectedTemplate === tpl.id ? 'text-indigo-400' : 'text-slate-500 group-hover:text-white'}`}>{tpl.name}</h3>
+                        <p className="text-[8px] font-bold text-slate-700 mt-1 uppercase tracking-tighter">{tpl.category}</p>
                       </div>
                     </motion.div>
                   );
