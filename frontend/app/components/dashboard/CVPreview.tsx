@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FileDown, Printer, FileEdit, CheckCircle, RefreshCw } from 'lucide-react';
+import { API_BASE_URL } from '../../lib/api';
 
 interface CVPreviewProps {
   cvData: any;
@@ -16,7 +17,7 @@ export default function CVPreview({ cvData, template }: CVPreviewProps) {
     const fetchPreview = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/export/preview`, {
+        const res = await fetch(`${API_BASE_URL}/api/export/preview`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ cv_data: cvData, template_name: template })
@@ -34,7 +35,7 @@ export default function CVPreview({ cvData, template }: CVPreviewProps) {
 
   const handleExport = async (format: 'pdf' | 'docx') => {
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/export/${format}`, {
+      const res = await fetch(`${API_BASE_URL}/api/export/${format}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cv_data: cvData, template_name: template })
@@ -53,51 +54,57 @@ export default function CVPreview({ cvData, template }: CVPreviewProps) {
 
   return (
     <div className="space-y-8 animate-fade">
-      <div className="flex justify-between items-center bg-white/5 p-6 rounded-2xl border border-white/10">
+      <div className="flex flex-col md:flex-row justify-between items-center bg-white/5 p-8 rounded-3xl border border-white/10 gap-6">
         <div>
-          <h3 className="text-xl font-bold flex items-center gap-2">
-            <CheckCircle className="text-emerald-400" />
+          <h3 className="text-xl font-bold flex items-center gap-3">
+            <CheckCircle className="text-emerald-400" size={24} />
             ¡CV Optimizado con Éxito!
           </h3>
-          <p className="text-slate-400 text-sm">Ahora puedes descargar tu CV en formatos profesionales.</p>
+          <p className="text-slate-500 text-sm mt-1">El motor de IA ha procesado tu perfil. Elige tu formato de descarga.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-4 w-full md:w-auto">
           <button 
              onClick={() => handleExport('docx')}
-             className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-xl border border-blue-500/20 transition-all text-sm font-semibold"
+             className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl border border-white/10 transition-all text-xs font-black uppercase tracking-widest"
           >
             <FileEdit size={16} />
-            Descargar Word (ATS)
+            Word
           </button>
           <button 
              onClick={() => handleExport('pdf')}
-             className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl shadow-lg shadow-purple-500/20 hover:scale-105 transition-all text-sm font-bold"
+             className="flex-1 md:flex-none flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl shadow-xl shadow-purple-500/20 hover:scale-[1.03] active:scale-[0.97] transition-all text-xs font-black uppercase tracking-widest"
           >
-            <FileDown size={18} />
-            Descargar PDF Premium
+            <FileDown size={20} />
+            PDF Premium
           </button>
         </div>
       </div>
 
-      <div className="glass-card p-0 overflow-hidden bg-white shadow-2xl ring-1 ring-black/5">
+      <div className="glass-card p-0 overflow-hidden bg-white shadow-2xl ring-1 ring-black/5 rounded-2xl relative">
         {loading ? (
-          <div className="h-[842px] flex flex-col items-center justify-center gap-4 bg-slate-50">
+          <div className="h-[842px] flex flex-col items-center justify-center gap-4 bg-slate-50/50 backdrop-blur-sm">
             <RefreshCw className="animate-spin text-purple-500" size={40} />
-            <p className="text-slate-500 font-bold animate-pulse">Generando Vista Previa HQ...</p>
+            <p className="text-slate-500 font-bold animate-pulse uppercase tracking-[0.2em] text-[10px]">Generando Vista Previa HQ...</p>
           </div>
         ) : (
-          <iframe 
-            srcDoc={html}
-            className="w-full min-h-[1100px] border-none"
-            title="CV Preview"
-          />
+          <div className="w-full h-full overflow-auto bg-slate-100 p-4 md:p-10 flex justify-center">
+             <div className="bg-white shadow-2xl w-full max-w-[800px] min-h-[1100px]">
+                <iframe 
+                  srcDoc={html}
+                  className="w-full h-full min-h-[1100px] border-none"
+                  title="CV Preview"
+                />
+             </div>
+          </div>
         )}
       </div>
 
-      <div className="text-center">
-        <p className="text-slate-500 text-xs uppercase tracking-widest font-bold mb-4 flex items-center justify-center gap-2">
+      <div className="text-center pt-4">
+        <p className="text-slate-600 text-[10px] uppercase tracking-[0.3em] font-black flex items-center justify-center gap-3 opacity-40">
+           <div className="w-10 h-px bg-slate-800" />
            <Printer size={12} />
-           Vista Previa Renderizada por CV-Pilot Engine
+           Renderizado por CV-Pilot Engine
+           <div className="w-10 h-px bg-slate-800" />
         </p>
       </div>
     </div>

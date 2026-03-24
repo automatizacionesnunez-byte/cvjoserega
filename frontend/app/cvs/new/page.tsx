@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import CVPreview from '@/app/components/dashboard/CVPreview';
 import { supabase } from '@/app/lib/supabase';
+import { API_BASE_URL } from '@/app/lib/api';
 
 export default function NewCV() {
   const [step, setStep] = useState(1);
@@ -51,7 +52,7 @@ export default function NewCV() {
       const { data: sessionData } = await supabase.auth.getSession();
       const currentUid = sessionData.session?.user?.id || userId;
       
-      await fetch('http://127.0.0.1:8000/api/cvs/', {
+      await fetch(`${API_BASE_URL}/api/cvs/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -77,10 +78,10 @@ export default function NewCV() {
     try {
       const formData = new FormData();
       formData.append('file', cvFile);
-      const parseRes = await fetch('http://127.0.0.1:8000/api/parse', { method: 'POST', body: formData });
+      const parseRes = await fetch(`${API_BASE_URL}/api/parse`, { method: 'POST', body: formData });
       const parsedCV = await parseRes.json();
       
-      const analyzeRes = await fetch('http://127.0.0.1:8000/api/analyze', {
+      const analyzeRes = await fetch(`${API_BASE_URL}/api/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cv_text: JSON.stringify(parsedCV), job_url: jobUrl })

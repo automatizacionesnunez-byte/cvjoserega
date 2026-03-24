@@ -18,6 +18,7 @@ import {
 import Link from 'next/link';
 
 import { supabase } from '../lib/supabase';
+import { API_BASE_URL } from '../lib/api';
 
 export default function CVList() {
   const [cvs, setCvs] = useState<any[]>([]);
@@ -41,7 +42,7 @@ export default function CVList() {
   const fetchCvs = async (uid: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/cvs/${uid}`);
+      const res = await fetch(`${API_BASE_URL}/api/cvs/${uid}`);
       const data = await res.json();
       setCvs(data);
     } catch (err) { console.error(err); }
@@ -50,7 +51,7 @@ export default function CVList() {
 
   const handleExport = async (cv: any) => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/export/pdf', {
+      const res = await fetch(`${API_BASE_URL}/api/export/pdf`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cv_data: cv.cv_data, template_name: cv.template_id || 'modern' })
@@ -67,14 +68,14 @@ export default function CVList() {
   const handleDelete = async (id: string) => {
     if (!confirm("¿Estás seguro de eliminar este CV?")) return;
     try {
-      await fetch(`http://127.0.0.1:8000/api/cvs/${id}`, { method: 'DELETE' });
+      await fetch(`${API_BASE_URL}/api/cvs/${id}`, { method: 'DELETE' });
       setCvs(cvs.filter(c => c.id !== id));
     } catch (err) { alert("Error al eliminar."); }
   };
 
   const handleDuplicate = async (id: string) => {
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/cvs/duplicate/${id}`, { method: 'POST' });
+      const res = await fetch(`${API_BASE_URL}/api/cvs/duplicate/${id}`, { method: 'POST' });
       const newCv = await res.json();
       setCvs([newCv, ...cvs]);
     } catch (err) { alert("Error al duplicar."); }

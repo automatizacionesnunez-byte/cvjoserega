@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { supabase } from '../../../lib/supabase';
+import { API_BASE_URL } from '../../../lib/api';
 
 interface CVData {
   personal_info: { full_name: string; email: string; phone: string; location: string; summary: string; linkedin?: string; github?: string; website?: string };
@@ -33,7 +34,7 @@ export default function CVEditor() {
           setUserId(sessionData.session.user.id);
         }
 
-        const res = await fetch(`http://127.0.0.1:8000/api/cvs/get/${cvId}`);
+        const res = await fetch(`${API_BASE_URL}/api/cvs/get/${cvId}`);
         const found = await res.json();
         if (found) {
           setCv(found);
@@ -54,7 +55,7 @@ export default function CVEditor() {
     if (!cvData) return;
     setSaving(true);
     try {
-      await fetch('http://127.0.0.1:8000/api/cvs/', {
+      await fetch(`${API_BASE_URL}/api/cvs/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

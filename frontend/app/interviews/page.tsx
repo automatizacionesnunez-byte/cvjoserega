@@ -12,6 +12,7 @@ import {
   BrainCircuit,
   Lightbulb
 } from 'lucide-react';
+import { API_BASE_URL } from '../lib/api';
 
 export default function Interviews() {
   const [cvFile, setCvFile] = useState<File | null>(null);
@@ -26,11 +27,11 @@ export default function Interviews() {
       // 1. Parse
       const formData = new FormData();
       formData.append('file', cvFile);
-      const parseRes = await fetch('http://127.0.0.1:8000/api/parse', { method: 'POST', body: formData });
+      const parseRes = await fetch(`${API_BASE_URL}/api/parse`, { method: 'POST', body: formData });
       const parsedCV = await parseRes.json();
 
       // 2. Prep
-      const prepRes = await fetch('http://127.0.0.1:8000/api/ai/interview-prep', {
+      const prepRes = await fetch(`${API_BASE_URL}/api/ai/interview-prep`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cv_data: parsedCV, job_description: jobDescription })
@@ -89,7 +90,7 @@ export default function Interviews() {
             <button 
               onClick={handleSimulate}
               disabled={loading || !cvFile || !jobDescription}
-              className="w-full py-5 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl font-bold text-lg shadow-xl shadow-purple-500/20 hover:scale-[1.01] transition-all flex items-center justify-center gap-3"
+              className="w-full py-5 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl font-bold text-lg shadow-xl shadow-purple-500/20 hover:scale-[1.01] transition-all flex items-center justify-center gap-3 uppercase tracking-widest"
             >
               {loading ? <RefreshCw className="animate-spin" /> : <Flame size={24} />}
               {loading ? 'Preparando Entrenamiento AI...' : 'Generar Sesión de Entrenamiento'}
@@ -100,7 +101,7 @@ export default function Interviews() {
         <div className="space-y-8 animate-fade pb-20">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold">Sesión de Entrenamiento</h2>
-            <button onClick={() => setQuestions([])} className="text-sm text-slate-500 hover:text-white transition-colors">Reiniciar</button>
+            <button onClick={() => setQuestions([])} className="text-sm text-slate-500 hover:text-white transition-colors uppercase tracking-widest font-black text-[10px]">Reiniciar</button>
           </div>
 
           <div className="grid grid-cols-1 gap-6">
@@ -124,14 +125,14 @@ export default function Interviews() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/5">
                    <div className="space-y-3">
-                      <h4 className="flex items-center gap-2 text-sm font-bold text-indigo-400">
+                      <h4 className="flex items-center gap-2 text-sm font-bold text-indigo-400 uppercase tracking-widest text-[10px]">
                         <Target size={16} /> 
                         Por qué preguntan:
                       </h4>
                       <p className="text-xs text-slate-400 leading-relaxed italic">"{q.reason}"</p>
                    </div>
                    <div className="space-y-3">
-                      <h4 className="flex items-center gap-2 text-sm font-bold text-emerald-400">
+                      <h4 className="flex items-center gap-2 text-sm font-bold text-emerald-400 uppercase tracking-widest text-[10px]">
                         <Lightbulb size={16} /> 
                         Estrategia Ganadora:
                       </h4>
@@ -145,7 +146,7 @@ export default function Interviews() {
           <div className="glass-card p-8 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 border-purple-500/20 text-center">
              <h3 className="text-xl font-bold mb-2">¿Listo para arrasar?</h3>
              <p className="text-slate-400 mb-6">Práctica estas respuestas enfocándote en tus logros cuantificados.</p>
-             <button className="px-8 py-3 bg-white text-black font-bold rounded-xl hover:bg-slate-200 transition-all flex items-center gap-2 mx-auto">
+             <button className="px-8 py-3 bg-white text-black font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-slate-200 transition-all flex items-center gap-2 mx-auto shadow-xl">
                Marcar Sesión como Completada
                <ChevronRight size={18} />
              </button>

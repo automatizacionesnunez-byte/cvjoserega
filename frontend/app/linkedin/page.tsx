@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Linkedin, RefreshCw, CheckCircle2, AlertCircle, Sparkles, ArrowRight, Target, TrendingUp, Eye } from 'lucide-react';
 
+import { API_BASE_URL } from '../lib/api';
+
 export default function LinkedInOptimizer() {
   const [profileUrl, setProfileUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -13,7 +15,7 @@ export default function LinkedInOptimizer() {
     if (!profileUrl) return;
     setLoading(true);
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/ai/analyze-linkedin', {
+      const res = await fetch(`${API_BASE_URL}/api/ai/analyze-linkedin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ profile_url: profileUrl })

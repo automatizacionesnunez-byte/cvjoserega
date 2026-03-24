@@ -12,7 +12,7 @@ import {
   CheckCircle2,
   Sparkles,
   Copy
-} from 'lucide-react';
+import { API_BASE_URL } from '../lib/api';
 
 export default function CoverLetter() {
   const [cvFile, setCvFile] = useState<File | null>(null);
@@ -27,11 +27,11 @@ export default function CoverLetter() {
       // 1. Parse PDF
       const formData = new FormData();
       formData.append('file', cvFile);
-      const parseRes = await fetch('http://127.0.0.1:8000/api/parse', { method: 'POST', body: formData });
+      const parseRes = await fetch(`${API_BASE_URL}/api/parse`, { method: 'POST', body: formData });
       const parsedCV = await parseRes.json();
 
       // 2. Generate cover letter via AI
-      const aiRes = await fetch('http://127.0.0.1:8000/api/ai/generate-cover-letter', {
+      const aiRes = await fetch(`${API_BASE_URL}/api/ai/generate-cover-letter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cv_data: parsedCV, job_url: jobUrl })

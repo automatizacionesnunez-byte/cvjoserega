@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { supabase } from '../lib/supabase';
+import { API_BASE_URL } from '../lib/api';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
@@ -36,7 +37,7 @@ export default function Dashboard() {
         const name = session?.user?.user_metadata?.full_name || session?.user?.email?.split('@')[0] || 'Candidato';
         setUserName(name);
 
-        const res = await fetch(`http://127.0.0.1:8000/api/cvs/${uid}`);
+        const res = await fetch(`${API_BASE_URL}/api/cvs/${uid}`);
         const data = await res.json();
         setCvs(data.slice(0, 5)); // Just the last 5
         setStats((prev: any) => ({ ...prev, cvs: data.length }));

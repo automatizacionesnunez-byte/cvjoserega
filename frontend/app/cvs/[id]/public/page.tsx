@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { RefreshCw, Download, ArrowLeft, Share2, FileText, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { supabase } from '../../../lib/supabase';
+import { API_BASE_URL } from '../../../lib/api';
 
 export default function PublicCVView() {
   const params = useParams();
@@ -16,12 +17,12 @@ export default function PublicCVView() {
   useEffect(() => {
     async function fetchCV() {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/cvs/get/${cvId}`);
+        const res = await fetch(`${API_BASE_URL}/api/cvs/get/${cvId}`);
         const found = await res.json();
         
         if (found) {
           setCv(found);
-          const previewRes = await fetch('http://127.0.0.1:8000/api/export/preview', {
+          const previewRes = await fetch(`${API_BASE_URL}/api/export/preview`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -41,7 +42,7 @@ export default function PublicCVView() {
   const handleExport = async (format: 'pdf' | 'docx') => {
     if (!cv) return;
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/export/${format}`, {
+      const res = await fetch(`${API_BASE_URL}/api/export/${format}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cv_data: cv.cv_data, template_name: cv.template_id || 'modern' })
