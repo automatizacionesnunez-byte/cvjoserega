@@ -44,9 +44,16 @@ export default function CVList() {
     try {
       const res = await fetch(`${API_BASE_URL}/api/cvs/${uid}`);
       const data = await res.json();
-      setCvs(data);
-    } catch (err) { console.error(err); }
-    finally { setLoading(false); }
+      if (Array.isArray(data)) {
+        setCvs(data);
+      } else {
+        console.error("API returned non-array data:", data);
+        setCvs([]);
+      }
+    } catch (err) { 
+      console.error(err); 
+      setCvs([]);
+    } finally { setLoading(false); }
   };
 
   const handleExport = async (cv: any) => {
@@ -69,7 +76,9 @@ export default function CVList() {
     if (!confirm("¿Estás seguro de eliminar este CV?")) return;
     try {
       await fetch(`${API_BASE_URL}/api/cvs/${id}`, { method: 'DELETE' });
-      setCvs(cvs.filter(c => c.id !== id));
+      if (Array.isArray(cvs)) {
+        setCvs(cvs.filter(c => c.id !== id));
+      }
     } catch (err) { alert("Error al eliminar."); }
   };
 
@@ -77,14 +86,18 @@ export default function CVList() {
     try {
       const res = await fetch(`${API_BASE_URL}/api/cvs/duplicate/${id}`, { method: 'POST' });
       const newCv = await res.json();
-      setCvs([newCv, ...cvs]);
+      if (Array.isArray(cvs)) {
+        setCvs([newCv, ...cvs]);
+      } else {
+        setCvs([newCv]);
+      }
     } catch (err) { alert("Error al duplicar."); }
   };
 
-  const filteredCvs = cvs.filter(c => 
+  const filteredCvs = Array.isArray(cvs) ? cvs.filter(c => 
     c.title?.toLowerCase().includes(search.toLowerCase()) || 
     c.template_id?.toLowerCase().includes(search.toLowerCase())
-  );
+  ) : [];
 
   return (
     <div className="space-y-10 animate-fade">

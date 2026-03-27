@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 CEO Premium: Executive CV Wizard
 
-## Getting Started
+A high-fidelity, professional CV generation platform designed for executives, technical leads, and creative directors. This platform combines a modern Next.js 15 frontend with a robust FastAPI backend engine to deliver pixel-perfect, A4-native CVs.
 
-First, run the development server:
+## ✨ Features
 
+- **Master Template Library**: 5 high-fidelity, executive-grade templates (CEO Premium, Executive Sidebar, Modern Full Sidebar, Tech Clean, UX Split).
+- **A4 Precision Engine**: 1:1 visual parity between frontend previews and backend-rendered PDFs.
+- **AI-Powered Analysis**: Deep CV parsing and strategic recommendations based on target job roles.
+- **ATS-Ready Architectures**: Optimized layouts for maximum compatibility with recruitment software.
+- **FastAPI Backend**: High-performance engine for PDF/DOCX export and AI coordination.
+
+## 🛠️ Technology Stack
+
+- **Frontend**: Next.js 15, Tailwind CSS 4, Framer Motion, Lucide React.
+- **Backend**: FastAPI, Jinja2, PyMuPDF, Python-docx.
+- **Database/Auth**: Supabase (PostgreSQL).
+- **AI Integration**: DeepSeek / SiliconFlow via AI Coordinator.
+
+## 📦 Getting Started
+
+### 1. Prerequisites
+- Node.js 18+
+- Python 3.9+
+
+### 2. Implementation
+
+#### Frontend
 ```bash
+# Navigate to root
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Backend
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🌐 Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Frontend (`.env.local`)
+- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase Project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase Anon Key
+- `NEXT_PUBLIC_API_URL`: URL of the FastAPI backend (e.g., `http://127.0.0.1:8000`)
 
-## Learn More
+### Backend (`backend/.env`)
+- `SILICONFLOW_API_KEY`: API Key for AI services
+- `SUPABASE_URL`: Supabase URL
+- `SUPABASE_KEY`: Supabase Key
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Frontend (Vercel)
+1. Push the code to GitHub.
+2. Link the repository in Vercel.
+3. Configure the environment variables in the Vercel dashboard.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Backend (Render / Railway / DigitalOcean)
+1. Deploy the `backend` directory.
+2. Ensure `requirements.txt` is detected.
+3. Set the `CORS` origins in `app/main.py` if needed.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+© 2026 CEO Premium Platform. All rights reserved.

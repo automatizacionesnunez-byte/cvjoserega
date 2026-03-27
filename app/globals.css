@@ -10,11 +10,14 @@
   --glass: rgba(15, 23, 42, 0.6);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-highlight: rgba(255, 255, 255, 0.03);
-  --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
 }
+
+.font-inter { font-family: var(--font-inter); }
+.font-playfair { font-family: var(--font-playfair); }
+.font-raleway { font-family: var(--font-raleway); }
 
 * {
   box-sizing: border-box;

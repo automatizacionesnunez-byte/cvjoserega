@@ -1,216 +1,217 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, CheckCircle2, Maximize2, X } from 'lucide-react';
 import Link from 'next/link';
 
 /* ─── Template Data ─── */
 const templates = [
-  { id: 'professional-light-v1', name: 'Ivory Archive', category: 'Clásico', color: 'from-[#f5f0e8] to-[#e8e0d0]', accent: '#8B7355', dark: false },
-  { id: 'professional-light-v2', name: 'Minimal Academic', category: 'Clásico', color: 'from-white to-[#f7f7f7]', accent: '#374151', dark: false },
-  { id: 'classic', name: 'Standard Times', category: 'Clásico', color: 'from-[#f8fafc] to-[#e2e8f0]', accent: '#1e293b', dark: false },
-  { id: 'professional-dark-v1', name: 'Aetheric Tech', category: 'Moderno', color: 'from-[#1e1b4b] to-[#0f172a]', accent: '#818cf8', dark: true },
-  { id: 'professional-dark-v2', name: 'Midnight Executive', category: 'Moderno', color: 'from-[#020617] to-[#0f172a]', accent: '#e2e8f0', dark: true },
-  { id: 'professional-modern-v1', name: 'Indigo Matrix', category: 'Moderno', color: 'from-[#4f46e5] to-[#7c3aed]', accent: '#e0e7ff', dark: true },
-  { id: 'professional-modern-v2', name: 'Startup Flow', category: 'Tech', color: 'from-[#3b82f6] to-[#6366f1]', accent: '#dbeafe', dark: true },
-  { id: 'modern', name: 'Default Spark', category: 'Tech', color: 'from-[#6366f1] to-[#8b5cf6]', accent: '#c7d2fe', dark: true },
-  { id: 'eye-catching-v1', name: 'Rose Curator', category: 'Creativo', color: 'from-[#fb7185] to-[#e11d48]', accent: '#fff1f2', dark: true },
-  { id: 'eye-catching-v2', name: 'Vibrant Portfolio', category: 'Creativo', color: 'from-[#f43f5e] to-[#be123c]', accent: '#ffe4e6', dark: true },
+  { 
+    id: 'ceo-premium-v1', 
+    name: 'CEO Premium', 
+    category: 'Executive', 
+    color: 'bg-[#1a2744]', 
+    accent: '#d4ac0d', 
+    secondary: '#f7f5f0',
+    dark: true 
+  },
+  { 
+    id: 'executive-sidebar-v1', 
+    name: 'Executive Sidebar', 
+    category: 'Executive', 
+    color: 'bg-[#1a2744]', 
+    accent: '#d4ac0d', 
+    secondary: '#ffffff',
+    dark: true 
+  },
+  { 
+    id: 'modern-full-sidebar-v1', 
+    name: 'Modern Full Sidebar', 
+    category: 'Modern', 
+    color: 'bg-[#008080]', 
+    accent: '#008080', 
+    secondary: '#ffffff',
+    dark: true 
+  },
+  { 
+    id: 'tech-clean-v1', 
+    name: 'Tech Clean', 
+    category: 'Tech', 
+    color: 'bg-[#1a1a1a]', 
+    accent: '#0066cc', 
+    secondary: '#f4f7f6',
+    dark: true 
+  },
+  { 
+    id: 'ux-split-v1', 
+    name: 'UX Split', 
+    category: 'Creative', 
+    color: 'bg-[#ff4d4d]', 
+    accent: '#ff4d4d', 
+    secondary: '#ffffff',
+    dark: true 
+  }
 ];
 
-const categories = ['Todos', 'Clásico', 'Moderno', 'Tech', 'Creativo'];
-
-/* ─── Mini CV Mockup Component ─── */
-function CVMockup({ tpl }: { tpl: typeof templates[0] }) {
-  const textColor = tpl.dark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.4)';
-  const headingColor = tpl.dark ? 'rgba(255,255,255,0.95)' : 'rgba(0,0,0,0.85)';
-  const lineColor = tpl.dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-  const pillBg = tpl.dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)';
-
-  return (
-    <div className={`w-full h-full bg-gradient-to-br ${tpl.color} p-5 flex flex-col`}>
-      {/* Header Area */}
-      <div className="mb-3">
-        <div className="h-[10px] rounded-full mb-1.5" style={{ width: '55%', backgroundColor: headingColor }} />
-        <div className="h-[6px] rounded-full" style={{ width: '35%', backgroundColor: textColor }} />
-      </div>
-
-      {/* Divider */}
-      <div className="h-px w-full mb-3" style={{ backgroundColor: lineColor }} />
-
-      {/* Two Column Layout */}
-      <div className="flex gap-3 flex-1">
-        {/* Left Column */}
-        <div className="flex-1 space-y-2">
-          <div className="h-[7px] rounded-full" style={{ width: '40%', backgroundColor: tpl.accent, opacity: 0.9 }} />
-          <div className="h-[5px] rounded-full" style={{ width: '90%', backgroundColor: textColor }} />
-          <div className="h-[5px] rounded-full" style={{ width: '75%', backgroundColor: textColor }} />
-          <div className="h-[5px] rounded-full" style={{ width: '85%', backgroundColor: textColor }} />
-
-          <div className="pt-2">
-            <div className="h-[7px] rounded-full mb-2" style={{ width: '40%', backgroundColor: tpl.accent, opacity: 0.9 }} />
-            <div className="h-[5px] rounded-full" style={{ width: '95%', backgroundColor: textColor }} />
-            <div className="h-[5px] rounded-full mt-1" style={{ width: '60%', backgroundColor: textColor }} />
-          </div>
-        </div>
-
-        {/* Right Column */}
-        <div className="w-[35%] space-y-2">
-          <div className="h-[7px] rounded-full" style={{ width: '60%', backgroundColor: tpl.accent, opacity: 0.9 }} />
-          <div className="flex flex-wrap gap-1">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="h-[14px] rounded-md px-1" style={{ backgroundColor: pillBg, width: `${40 + i * 10}%` }} />
-            ))}
-          </div>
-          <div className="pt-2">
-            <div className="h-[7px] rounded-full mb-2" style={{ width: '55%', backgroundColor: tpl.accent, opacity: 0.9 }} />
-            <div className="h-[5px] rounded-full" style={{ width: '80%', backgroundColor: textColor }} />
-            <div className="h-[5px] rounded-full mt-1" style={{ width: '65%', backgroundColor: textColor }} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { A4Preview } from '@/app/components/A4Preview';
 
 /* ─── Main Component ─── */
 export default function TemplateGallery() {
-  const [selected, setSelected] = useState('modern');
-  const [activeCategory, setActiveCategory] = useState('Todos');
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const filtered = useMemo(() => {
-    return templates.filter(tpl => {
-      const matchCategory = activeCategory === 'Todos' || tpl.category === activeCategory;
-      const matchSearch = tpl.name.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchCategory && matchSearch;
-    });
-  }, [activeCategory, searchQuery]);
-
-  const selectedTemplate = templates.find(t => t.id === selected);
+  const [selectedTemplate, setSelectedTemplate] = useState(templates[0]);
+  const [showLarge, setShowLarge] = useState(false);
+  const tpl = selectedTemplate;
 
   return (
-    <div className="space-y-10 animate-fade pb-20">
+    <div className="space-y-12 animate-fade pb-20 max-w-6xl mx-auto px-4">
       {/* ── Header ── */}
-      <div className="text-center pt-4 space-y-3">
-        <h1 className="text-4xl md:text-5xl font-black tracking-tight">
-          Elige una <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">plantilla</span>
+      <div className="text-center pt-8 space-y-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-2">
+          <Sparkles size={14} className="text-indigo-400" />
+          <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400">Diseños Optimizados</span>
+        </div>
+        <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none italic uppercase">
+          NUESTRAS <span className="text-indigo-500 underline decoration-[#d4ac0d]/30 decoration-8 underline-offset-8">PLANTILLAS</span>
         </h1>
-        <p className="text-slate-500 max-w-lg mx-auto text-sm">
-          Todas optimizadas para sistemas ATS. Elige el estilo que mejor represente tu perfil profesional.
+        <p className="text-slate-400 max-w-xl mx-auto text-base font-medium">
+          Selección de diseños especializados para cargos C-Level, perfiles técnicos y creativos senior.
         </p>
       </div>
 
-      {/* ── Search Bar ── */}
-      <div className="max-w-2xl mx-auto flex gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar plantillas..."
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3.5 outline-none focus:border-indigo-500/50 transition-all text-sm"
-          />
+      <div className="grid md:grid-cols-[450px_1fr] gap-16 items-start bg-white/[0.02] p-6 md:p-12 rounded-[60px] border border-white/5 relative overflow-hidden group mb-12">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/5 blur-[120px] rounded-full -mr-48 -mt-24 pointer-events-none"></div>
+        
+        {/* Visual Preview */}
+        <div className="relative group/preview cursor-zoom-in" onClick={() => setShowLarge(true)}>
+          <div className="aspect-[1/1.414] w-full rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-[0_40px_80px_rgba(0,0,0,0.5)] transition-all group-hover/preview:scale-[1.02] group-hover/preview:shadow-indigo-500/20 relative bg-[#0a0a0c]">
+             <div className="absolute inset-0 flex items-start justify-center overflow-hidden">
+                <div className="origin-top transform-gpu scale-[0.45] md:scale-[0.55]">
+                   <A4Preview templateId={tpl.id} />
+                </div>
+             </div>
+          </div>
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm rounded-2xl">
+             <div className="flex flex-col items-center gap-4">
+                <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+                   <Maximize2 className="text-white" size={32} />
+                </div>
+                <p className="text-white font-black uppercase tracking-[0.3em] text-[10px]">Ver nítido</p>
+             </div>
+          </div>
         </div>
-        <button className="px-6 bg-indigo-600 hover:bg-indigo-500 rounded-2xl font-bold text-sm transition-all shadow-lg shadow-indigo-500/20 whitespace-nowrap">
-          Buscar
-        </button>
-      </div>
 
-      {/* ── Category Pills ── */}
-      <div className="flex flex-wrap justify-center gap-2">
-        {categories.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`px-5 py-2 rounded-full text-sm font-semibold border transition-all ${
-              activeCategory === cat
-                ? 'bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-500/20'
-                : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {/* ── Template Grid ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        <AnimatePresence mode="popLayout">
-          {filtered.map((tpl) => (
-            <motion.div
-              key={tpl.id}
-              layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.25 }}
-              whileHover={{ y: -6 }}
-              onClick={() => setSelected(tpl.id)}
-              className="cursor-pointer group"
-            >
-              {/* Preview Card */}
-              <div className={`aspect-[4/5] w-full rounded-2xl overflow-hidden transition-all duration-200 ${
-                selected === tpl.id
-                  ? 'ring-[3px] ring-indigo-500 ring-offset-4 ring-offset-[#020203] shadow-2xl shadow-indigo-500/20'
-                  : 'ring-1 ring-white/10 group-hover:ring-2 group-hover:ring-white/20 group-hover:shadow-xl group-hover:shadow-black/40'
-              }`}>
-                <CVMockup tpl={tpl} />
+        {/* Content & Benefits */}
+        <div className="space-y-10 pt-4 relative z-10">
+           <div className="space-y-3">
+              <h2 className="text-4xl md:text-5xl font-black tracking-tighter italic">{tpl.name}</h2>
+              <div className="flex gap-4">
+                 <span className="text-indigo-400 font-bold uppercase tracking-[0.2em] text-[10px] bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">{tpl.category}</span>
+                 <span className="text-[#d4ac0d] font-bold uppercase tracking-[0.2em] text-[10px] bg-[#d4ac0d]/10 px-3 py-1 rounded-full border border-[#d4ac0d]/20">ATS READY</span>
               </div>
+           </div>
 
-              {/* Title */}
-              <div className="mt-3.5 px-1">
-                <h3 className={`text-[15px] font-semibold transition-colors ${
-                  selected === tpl.id ? 'text-indigo-400' : 'text-slate-300 group-hover:text-white'
-                }`}>
-                  {tpl.name}
-                </h3>
-                <p className="text-[11px] text-slate-600 mt-0.5">{tpl.category}</p>
+           <p className="text-slate-400 leading-relaxed text-sm md:text-base">
+             Cada plantilla ha sido validada por expertos en selección para garantizar la máxima legibilidad y una presentación impecable.
+           </p>
+
+           <div className="grid gap-5">
+              {[
+                "Jerarquía visual optimizada",
+                "Tipografías modernas (Google Fonts)",
+                "Diseño pixel-perfect",
+                "Totalmente integrado con el motor PDF",
+                "Estructura modular personalizada"
+              ].map((benefit, idx) => (
+                <div key={idx} className="flex items-center gap-4 group/item">
+                  <div className="w-8 h-8 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center shrink-0 group-hover/item:scale-110 transition-transform">
+                     <CheckCircle2 size={16} className="text-green-500" />
+                  </div>
+                  <span className="text-slate-300 text-sm md:text-base font-semibold">{benefit}</span>
+                </div>
+              ))}
+           </div>
+
+           <div className="pt-10 flex flex-col sm:flex-row gap-6">
+             <Link href={`/cvs/new?template=${tpl.id}`} className="flex-1">
+               <button className="w-full group flex items-center justify-center gap-4 px-10 py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-full hover:bg-slate-100 transition-all shadow-2xl shadow-indigo-500/10">
+                 Usar este modelo
+                 <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+               </button>
+             </Link>
+             <button 
+                onClick={() => setShowLarge(true)}
+                className="px-10 py-5 bg-white/5 border border-white/10 hover:bg-white/10 rounded-full font-black uppercase tracking-widest text-[10px] transition-all"
+             >
+                Ver en Detalle
+             </button>
+           </div>
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        <h3 className="text-2xl font-black italic tracking-tighter uppercase px-2 border-l-4 border-indigo-500">Otras Opciones</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          {templates.map((t) => (
+            <motion.div
+              key={t.id}
+              whileHover={{ y: -5 }}
+              className={`cursor-pointer rounded-3xl p-4 transition-all border ${
+                tpl.id === t.id 
+                  ? 'bg-indigo-500/10 border-indigo-500/30 ring-2 ring-indigo-500/20' 
+                  : 'bg-white/5 border-white/10 hover:border-white/20'
+              }`}
+              onClick={() => setSelectedTemplate(t)}
+            >
+              <div className="aspect-[1/1.414] rounded-2xl overflow-hidden mb-4 shadow-lg ring-1 ring-white/10 relative bg-[#0a0a0c]">
+                <div className="absolute inset-0 flex items-start justify-center overflow-hidden">
+                   <div className="origin-top transform-gpu scale-[0.22] md:scale-[0.25] lg:scale-[0.28]">
+                      <A4Preview templateId={t.id} />
+                   </div>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">{t.category}</div>
+                <div className="text-[11px] font-bold text-white truncate uppercase">{t.name}</div>
               </div>
             </motion.div>
           ))}
-        </AnimatePresence>
+        </div>
       </div>
 
-      {/* ── Empty State ── */}
-      {filtered.length === 0 && (
-        <div className="text-center py-16 opacity-40">
-          <Search size={40} className="mx-auto mb-4" />
-          <p className="text-lg font-bold">Sin resultados</p>
-          <p className="text-sm text-slate-500">Prueba con otra búsqueda o categoría.</p>
-        </div>
-      )}
+      {/* ── Large Preview Modal ── */}
+      <AnimatePresence>
+        {showLarge && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-10"
+          >
+            <button 
+              onClick={() => setShowLarge(false)}
+              className="absolute top-8 right-8 w-14 h-14 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all z-[110]"
+            >
+              <X size={32} />
+            </button>
+            
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="max-w-4xl w-full h-full md:h-[90vh] overflow-y-auto rounded-xl shadow-2xl custom-scrollbar flex justify-center p-4"
+            >
+                <div className="min-w-[794px] max-w-[794px] h-fit bg-white">
+                   <A4Preview templateId={tpl.id} />
+                </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* ── Sticky Footer CTA ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="glass-card p-8 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 flex flex-col md:flex-row items-center justify-between gap-6"
-      >
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center">
-            <Sparkles className="text-indigo-400" size={22} />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold">
-              {selectedTemplate ? (
-                <>Plantilla seleccionada: <span className="text-indigo-400">{selectedTemplate.name}</span></>
-              ) : (
-                'Selecciona una plantilla'
-              )}
-            </h3>
-            <p className="text-xs text-slate-500">Optimizada para ATS · Formato profesional · Descarga PDF/Word</p>
-          </div>
-        </div>
-        <Link href={`/cvs/new?template=${selected}`}>
-          <button className="flex items-center gap-2 px-8 py-3.5 bg-white text-black font-bold rounded-2xl hover:scale-105 transition-all shadow-xl shadow-white/10 whitespace-nowrap">
-            Usar esta plantilla
-            <ArrowRight size={18} />
-          </button>
-        </Link>
-      </motion.div>
+      {/* ── Footnote ── */}
+      <div className="text-center opacity-40 py-12">
+        <p className="text-[10px] font-black uppercase tracking-[0.4em]">Optimización Continua v2.0</p>
+      </div>
     </div>
   );
 }
